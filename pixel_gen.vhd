@@ -1,11 +1,3 @@
--- ============================================================
--- pixel_gen.vhd
--- Genera el color del pixel (pixel_x, pixel_y).
---   Fuera de la zona visible -> negro (obligatorio en VGA).
---   Dentro del cuadrado      -> color inverso del fondo (siempre contrasta).
---   Resto                    -> color de fondo bg (R,G,B), 000 = negro.
--- La DE0 tiene DAC de 4 bits por canal, asi que cada canal vale "0000" o "1111".
--- ============================================================
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -20,7 +12,7 @@ entity pixel_gen is
     video_on : in  std_logic;
     sq_x     : in  unsigned(9 downto 0);
     sq_y     : in  unsigned(9 downto 0);
-    bg       : in  std_logic_vector(2 downto 0);  -- (2)=R (1)=G (0)=B
+    bg       : in  std_logic_vector(2 downto 0);  
     r        : out std_logic_vector(3 downto 0);
     g        : out std_logic_vector(3 downto 0);
     b        : out std_logic_vector(3 downto 0)
