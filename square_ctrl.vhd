@@ -1,27 +1,19 @@
--- ============================================================
--- square_ctrl.vhd
--- Posicion del cuadrado. Se actualiza una vez por cuadro (60 Hz).
---   axis_v = '0' -> mueve en horizontal
---   axis_v = '1' -> mueve en vertical
---   btn_dec: izquierda / arriba      btn_inc: derecha / abajo
--- La posicion se limita a los bordes de la pantalla.
--- ============================================================
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity square_ctrl is
   generic (
-    SIZE : natural := 40;   -- lado del cuadrado en pixeles
-    STEP : natural := 4     -- pixeles que avanza por cuadro (4 px * 60 Hz = 240 px/s)
+    SIZE : natural := 40;   
+    STEP : natural := 4     
   );
   port (
     clk        : in  std_logic;
-    rst        : in  std_logic;                 -- activo en alto: vuelve al centro
+    rst        : in  std_logic;                
     frame_tick : in  std_logic;
     axis_v     : in  std_logic;
-    btn_dec    : in  std_logic;                 -- '1' = presionado
-    btn_inc    : in  std_logic;                 -- '1' = presionado
+    btn_dec    : in  std_logic;                
+    btn_inc    : in  std_logic;                
     sq_x       : out unsigned(9 downto 0);
     sq_y       : out unsigned(9 downto 0)
   );
@@ -42,7 +34,7 @@ begin
     elsif rising_edge(clk) then
       if frame_tick = '1' then
         if axis_v = '0' then
-          -- ---------------- horizontal ----------------
+         
           if btn_inc = '1' and btn_dec = '0' then
             if x + STEP <= X_MAX then
               x <= x + STEP;
@@ -57,7 +49,7 @@ begin
             end if;
           end if;
         else
-          -- ---------------- vertical ----------------
+         
           if btn_inc = '1' and btn_dec = '0' then
             if y + STEP <= Y_MAX then
               y <= y + STEP;
