@@ -1,9 +1,3 @@
--- ============================================================
--- tb_vga.vhd  -- Testbench compatible con VHDL-93 (ModelSim)
--- NO agregar este archivo al proyecto de Quartus: es solo para simulacion.
--- Conecta vga_sync + square_ctrl + pixel_gen igual que el top
--- (SQ_STEP = 64 para probar los limites en pocos cuadros).
--- ============================================================
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
