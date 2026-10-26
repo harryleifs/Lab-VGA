@@ -1,4 +1,3 @@
--- Testbench (VHDL-2008, ModelSim/GHDL). Verifica tiempos VGA, movimiento, limites y colores.
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -18,14 +17,14 @@ architecture sim of tb_vga is
   signal vs_d             : std_logic := '1';
 begin
 
-  clk <= not clk after 10 ns;   -- 50 MHz
+  clk <= not clk after 10 ns;   
 
   dut : entity work.vga_square_top
-    generic map (SQ_STEP => 64)   -- paso grande para probar los limites en pocos cuadros
+    generic map (SQ_STEP => 64)   
     port map (CLOCK_50 => clk, BUTTON => btn, SW => sw,
               VGA_HS => hs, VGA_VS => vs, VGA_R => r, VGA_G => g, VGA_B => b);
 
-  -- Tiempos de HSync: periodo 32 us, pulso en bajo 3.84 us
+  
   process (hs) is
   begin
     if falling_edge(hs) then
@@ -40,7 +39,7 @@ begin
     end if;
   end process;
 
-  -- Tiempos de VSync: periodo 525 lineas = 16.8 ms, pulso en bajo 2 lineas = 64 us
+  
   process (vs) is
   begin
     if falling_edge(vs) then
@@ -55,7 +54,7 @@ begin
     end if;
   end process;
 
-  -- Cuenta ciclos de reloj con R="1111" dentro de cada cuadro (2 ciclos por pixel)
+  
   process (clk) is
   begin
     if rising_edge(clk) then
@@ -87,51 +86,51 @@ begin
       report "Fondo negro: pixeles blancos esperados 1600, ciclos=" & natural'image(r_last) severity error;
     report "[1] Sincronismos y cuadrado inicial OK";
 
-    -- Con SQ_STEP = 64: X_MAX = 600, Y_MAX = 440, inicio (300, 220)
-    -- Derecha 2 cuadros: 300 + 128 = 428
+    
+    
     btn(0) <= '0';  frames(2);  btn(0) <= '1';  wait for 1 us;
     assert sqx = 428 report "Derecha: sqx=" & integer'image(to_integer(sqx)) severity error;
     report "[2] Movimiento a la derecha OK";
 
-    -- Izquierda 3 cuadros: 428 - 192 = 236
+    
     btn(2) <= '0';  frames(3);  btn(2) <= '1';  wait for 1 us;
     assert sqx = 236 report "Izquierda: sqx=" & integer'image(to_integer(sqx)) severity error;
     report "[3] Movimiento a la izquierda OK";
 
-    -- Vertical: arriba 2 cuadros: 220 - 128 = 92
+    
     sw(0) <= '1';  wait for 1 us;
     btn(2) <= '0';  frames(2);  btn(2) <= '1';  wait for 1 us;
     assert sqy = 92 report "Arriba: sqy=" & integer'image(to_integer(sqy)) severity error;
     assert sqx = 236 report "El eje X no debia cambiar" severity error;
     report "[4] Movimiento vertical (arriba) OK";
 
-    -- Abajo 6 cuadros: 156,220,284,348,412 y luego 476>440 => se limita a 440
+    
     btn(0) <= '0';  frames(6);  btn(0) <= '1';  wait for 1 us;
     assert sqy = 440 report "Limite inferior: sqy=" & integer'image(to_integer(sqy)) severity error;
     report "[5] Limite inferior OK";
 
-    -- Arriba 8 cuadros: ... 56 y luego no alcanza para restar 64 => 0
+    
     btn(2) <= '0';  frames(8);  btn(2) <= '1';  wait for 1 us;
     assert sqy = 0 report "Limite superior: sqy=" & integer'image(to_integer(sqy)) severity error;
     report "[6] Limite superior OK";
 
-    -- Horizontal: derecha 7 cuadros: 300,364,428,492,556 y luego 620>600 => 600
+    
     sw(0) <= '0';  wait for 1 us;
     btn(0) <= '0';  frames(7);  btn(0) <= '1';  wait for 1 us;
     assert sqx = 600 report "Limite derecho: sqx=" & integer'image(to_integer(sqx)) severity error;
     report "[7] Limite derecho OK";
 
-    -- Izquierda 11 cuadros: 600 -> ... 24 -> 0
+    
     btn(2) <= '0';  frames(11);  btn(2) <= '1';  wait for 1 us;
     assert sqx = 0 report "Limite izquierdo: sqx=" & integer'image(to_integer(sqx)) severity error;
     report "[8] Limite izquierdo OK";
 
-    -- Reset (BUTTON1) vuelve al centro
+    
     btn(1) <= '0';  wait for 1 us;  btn(1) <= '1';  wait for 1 us;
     assert sqx = 300 and sqy = 220 report "Reset incorrecto" severity error;
     report "[9] Reset OK";
 
-    -- Fondo rojo (SW3=1): rojo en todo el area visible menos el cuadrado (que sale cian)
+    
     sw(3 downto 1) <= "100";  frames(2);
     assert r_last = 2 * (640*480 - 40*40)
       report "Fondo rojo: ciclos R=1111 esperados 611200, obtenidos " & natural'image(r_last) severity error;
