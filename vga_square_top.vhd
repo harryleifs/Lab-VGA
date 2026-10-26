@@ -1,19 +1,10 @@
--- ============================================================
--- vga_square_top.vhd   (Top-level para la DE0)
---   BUTTON(2) : izquierda / arriba
---   BUTTON(0) : derecha  / abajo
---   BUTTON(1) : reset (el cuadrado vuelve al centro)
---   SW(0)     : eje   -> '0' horizontal, '1' vertical
---   SW(3 downto 1) : color de fondo (R,G,B); "000" = negro
--- Los botones de la DE0 son activos en BAJO (presionado = '0').
--- ============================================================
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity vga_square_top is
   generic (
-    SQ_STEP : natural := 4    -- pixeles por cuadro (velocidad); el testbench usa otro valor
+    SQ_STEP : natural := 4    
   );
   port (
     CLOCK_50 : in  std_logic;
@@ -93,7 +84,7 @@ begin
       b        => b_i
     );
 
-  -- Salidas registradas: RGB y sincronismos cambian juntos
+ 
   process (CLOCK_50) is
   begin
     if rising_edge(CLOCK_50) then
