@@ -47,7 +47,7 @@ begin
     port map (pixel_x => px, pixel_y => py, video_on => von,
               sq_x => sqx, sq_y => sqy, bg => bg, r => r, g => g, b => b);
  
-  -- HSync: periodo 32 us, pulso en bajo 3.84 us
+  
   process (hs) is
   begin
     if falling_edge(hs) then
@@ -62,7 +62,7 @@ begin
     end if;
   end process;
  
-  -- VSync: periodo 525 lineas = 16.8 ms, pulso en bajo 2 lineas = 64 us
+  
   process (vs) is
   begin
     if falling_edge(vs) then
@@ -77,7 +77,7 @@ begin
     end if;
   end process;
  
-  -- Cuenta ciclos de reloj con R="1111" en cada cuadro (2 ciclos por pixel)
+  
   process (clk) is
   begin
     if rising_edge(clk) then
@@ -106,7 +106,7 @@ begin
       report "Fondo negro: ciclos esperados 3200, obtenidos " & natural'image(r_last) severity error;
     report "[1] Sincronismos y cuadrado inicial OK";
  
-    -- Con STEP = 64: X_MAX = 600, Y_MAX = 440, inicio (300, 220)
+    
     btn_inc <= '1';  frames(2);  btn_inc <= '0';  wait for 1 us;
     assert sqx = 428 report "Derecha: sqx=" & integer'image(to_integer(sqx)) severity error;
     report "[2] Movimiento a la derecha OK";
@@ -142,7 +142,6 @@ begin
     assert sqx = 300 and sqy = 220 report "Reset incorrecto" severity error;
     report "[9] Reset OK";
  
-    -- Fondo rojo: R=1111 en todo el area visible menos el cuadrado (que sale cian)
     bg <= "100";  frames(2);
     assert r_last = 2 * (640*480 - 40*40)
       report "Fondo rojo: esperados 611200, obtenidos " & natural'image(r_last) severity error;
