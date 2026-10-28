@@ -22,7 +22,7 @@ architecture rtl of vga_square_top is
 
   constant SQ_SIZE : natural := 40;
 
-  -- sincronizadores de entradas (2 flip-flops)
+  
   signal btn_s1, btn_s2 : std_logic_vector(2 downto 0) := (others => '1');
   signal sw_s1,  sw_s2  : std_logic_vector(3 downto 0) := (others => '0');
 
